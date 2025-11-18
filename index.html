@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+        /* CÀI ĐẶT CƠ BẢN */
         body {
-            /* Nền màu kem nhẹ cho sạch sẽ */
-            background-color: #fcf5f5;
+            background-color: #fef5f5; /* Nền hồng phấn rất nhạt */
             height: 100vh;
             margin: 0;
             display: flex;
@@ -19,51 +19,49 @@
             overflow: hidden;
         }
 
-        /* Khung chính */
-        .wrapper {
+        /* KHUNG CHỨA TOÀN BỘ */
+        .container {
             position: relative;
-            width: 320px;
-            height: 220px; /* Kích thước phong bì */
+            width: 320px; /* Chiều rộng cố định cho đẹp trên mobile */
+            height: 220px; /* Chiều cao phong bì */
             cursor: pointer;
-            margin-top: 100px; /* Để khoảng trống phía trên cho thiệp trồi lên */
+            margin-top: 60px; /* Tạo khoảng trống bên trên để thiệp bay lên */
         }
 
-        /* 1. LƯNG PHONG BÌ (Màu hồng đậm nhất) */
-        .envelope-back {
+        /* 1. LƯNG PHONG BÌ (Lớp dưới cùng) */
+        .back {
             position: absolute;
             width: 100%;
             height: 100%;
             background-color: #ff9a9e;
             border-radius: 10px;
             z-index: 1;
-            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
         }
 
-        /* 2. TẤM THIỆP (Nằm giữa Lưng và Túi trước) */
+        /* 2. TẤM THIỆP (Lớp giữa) */
         .card {
             position: absolute;
-            left: 15px; /* Căn giữa: (320 - 290) / 2 */
-            width: 290px;
-            height: 350px; /* Thiệp dài */
+            left: 10px;
+            width: 300px; /* Nhỏ hơn phong bì chút xíu */
+            height: 320px; /* Thiệp cao */
             background: white;
             border-radius: 8px;
-            padding: 25px 20px;
+            padding: 20px;
             box-sizing: border-box;
             text-align: center;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 -5px 10px rgba(0,0,0,0.1);
             
-            /* VỊ TRÍ BAN ĐẦU: Thụt sâu xuống dưới để giấu đi */
-            bottom: 0; 
-            transform: translateY(100px); /* Đẩy thiệp xuống thấp hẳn */
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hiệu ứng nảy nhẹ */
-            z-index: 2;
+            /* ĐIỀU CHỈNH QUAN TRỌNG: VỊ TRÍ BAN ĐẦU */
+            top: 10px; /* Chỉ cách đỉnh 10px */
+            z-index: 2; /* Nằm trên lưng, dưới nắp */
             
-            /* Ẩn bớt phần thừa dưới đáy phong bì */
-            /* Nhưng ta sẽ dùng z-index để che */
+            /* KỸ THUẬT GIẤU THIỆP: Đẩy thiệp xuống và dùng clip-path hoặc nắp che */
+            transform: translateY(50px); /* Đẩy thiệp xuống sâu trong túi */
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* 3. TÚI TRƯỚC (Tam giác dưới - Che chân thiệp) */
-        .envelope-front {
+        /* 3. TÚI TRƯỚC (Lớp che chân thiệp) */
+        .front {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -71,14 +69,14 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-bottom: 120px solid #ffc3a0; /* Màu hồng nhạt hơn lưng */
+            border-bottom: 130px solid #ffc3a0; /* Cao hơn để che tốt hơn */
             z-index: 4; /* Đè lên thiệp */
             border-radius: 0 0 10px 10px;
-            pointer-events: none; /* Cho phép bấm xuyên qua vào wrapper */
+            pointer-events: none;
         }
 
-        /* 4. NẮP PHONG BÌ (Tam giác trên - Che đầu thiệp) */
-        .envelope-flap {
+        /* 4. NẮP PHONG BÌ (Lớp che đầu thiệp) */
+        .flap {
             position: absolute;
             top: 0;
             left: 0;
@@ -86,100 +84,118 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 120px solid #ffb7b2; /* Màu nắp */
+            border-top: 130px solid #ffb7b2; /* Nắp to để che kín thiệp */
             transform-origin: top;
             transition: transform 0.6s ease, z-index 0.1s;
-            z-index: 5; /* Trên cùng khi đóng */
+            z-index: 5; /* Nằm trên cùng khi đóng */
             border-radius: 10px 10px 0 0;
         }
 
-        /* CHỮ "Kính gửi Thầy" */
-        .cover-text {
+        /* CHỮ BÊN NGOÀI (Nằm trên nắp) */
+        .outer-text {
             position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 6;
-            text-align: center;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            transition: opacity 0.3s;
-            width: 100%;
-            pointer-events: none;
-        }
-        .cover-text h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.2rem;
-            margin: 0;
-            color: #d35400;
-        }
-
-        /* NÚT MỞ */
-        .open-hint {
-            position: absolute;
-            bottom: -60px;
+            top: 50px; /* Căn chỉnh vị trí trên nắp */
             left: 50%;
             transform: translateX(-50%);
-            background-color: #ff6b6b;
+            z-index: 6; /* Trên cùng */
+            text-align: center;
             color: white;
-            padding: 10px 25px;
-            border-radius: 25px;
+            width: 100%;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .outer-text h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin: 0;
+            color: #d35400; /* Màu chữ đậm cho dễ đọc */
+        }
+        .outer-text small { font-size: 0.9rem; color: #fff; font-weight: bold; }
+
+        /* NÚT ẤN MỞ */
+        .open-btn {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e74c3c;
+            color: white;
             border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
             transition: all 0.3s;
-        }
-        .open-hint:hover { transform: translateX(-50%) scale(1.05); }
-
-        /* --- TRẠNG THÁI MỞ --- */
-        .wrapper.open .envelope-flap {
-            transform: rotateX(180deg); /* Lật nắp */
-            z-index: 1; /* Đưa nắp ra sau lưng */
+            z-index: 10;
         }
 
-        .wrapper.open .card {
-            transform: translateY(-150px); /* Thiệp trồi lên cao */
-            z-index: 3; /* Nổi lên trên túi trước */
-            transition-delay: 0.2s; /* Đợi nắp mở xíu mới lên */
+        /* --- TRẠNG THÁI KHI MỞ (OPEN) --- */
+        
+        /* 1. Nắp lật lên và chui ra sau */
+        .container.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1; 
         }
 
-        .wrapper.open .cover-text,
-        .wrapper.open .open-hint {
+        /* 2. Chữ bên ngoài biến mất */
+        .container.open .outer-text,
+        .container.open .open-btn {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Nội dung thiệp */
-        .icon { font-size: 50px; margin-bottom: 10px; }
+        /* 3. Thiệp bay lên */
+        .container.open .card {
+            transform: translateY(-180px); /* Bay lên cao hẳn */
+            z-index: 3; /* Nổi lên trên túi trước */
+            transition-delay: 0.2s;
+        }
+
+        /* NỘI DUNG BÊN TRONG THIỆP */
+        .icon { font-size: 40px; margin-bottom: 5px; }
         .card h1 {
             font-family: 'Dancing Script', cursive;
-            color: #d35400;
-            font-size: 2rem;
-            margin: 0;
+            color: #c0392b;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
         }
-        .message { font-size: 0.95rem; color: #555; margin: 15px 0; line-height: 1.5; }
+        .message {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
         .highlight { color: #e74c3c; font-weight: bold; }
         
-        .signature-box { margin-top: 15px; color: #333; }
-        .sign-title { font-weight: bold; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        .sign-name { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #c0392b; display: block; margin-top: 5px; }
+        .signature {
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .sig-title { font-size: 0.8rem; font-weight: bold; color: #333; text-transform: uppercase; }
+        .sig-name { 
+            font-family: 'Dancing Script', cursive; 
+            font-size: 1.5rem; 
+            color: #c0392b; 
+            display: block; 
+            margin-top: 2px;
+        }
 
         .music-btn {
-            margin-top: 15px;
-            padding: 8px 20px;
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
             background: #e74c3c;
             color: white;
             border: none;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 0.8rem;
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 100%;
+            align-items: center;
+            gap: 5px;
         }
         .spinning { animation: spin 2s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -188,9 +204,8 @@
 </head>
 <body>
 
-    <div class="wrapper" onclick="openCard()">
-        
-        <div class="envelope-back"></div>
+    <div class="container" onclick="openEnvelope()">
+        <div class="back"></div>
 
         <div class="card">
             <div class="icon">🎓</div>
@@ -198,31 +213,30 @@
             <div class="message">
                 "Mỗi khi nhắc về thời cắp sách,<br>
                 Hình bóng Thầy xưa lại hiện về."<br>
-                Nhân ngày <span class="highlight">20/11</span>, em kính chúc Thầy luôn vui vẻ và hạnh phúc!
+                Nhân ngày <span class="highlight">20/11</span>, em kính chúc Thầy luôn mạnh khỏe!
             </div>
-
-            <div class="signature-box">
-                <span class="sign-title">— Học trò cũ —</span>
-                <span class="sign-name">Trần Quang Tân</span>
+            
+            <div class="signature">
+                <div class="sig-title">— HỌC TRÒ CŨ —</div>
+                <div class="sig-name">Trần Quang Tân</div>
             </div>
 
             <button class="music-btn" onclick="toggleMusic(event)">
-                <span id="musicIcon">💿</span>
+                <span id="musicIcon">💿</span> 
                 <span id="musicText">Bụi Phấn (Đang phát)</span>
             </button>
         </div>
 
-        <div class="envelope-front"></div>
+        <div class="front"></div>
 
-        <div class="cover-text">
+        <div class="outer-text">
             <h2>Kính gửi Thầy</h2>
             <small>Nhân ngày 20/11</small>
         </div>
 
-        <div class="envelope-flap"></div>
+        <div class="flap"></div>
 
-        <button class="open-hint">Ấn vào đây để mở</button>
-
+        <button class="open-btn">Ấn vào đây để mở</button>
     </div>
 
     <audio id="bgMusic" loop>
@@ -230,20 +244,17 @@
     </audio>
 
     <script>
-        let isOpen = false;
+        let opened = false;
         const music = document.getElementById("bgMusic");
 
-        function openCard() {
-            if (isOpen) return;
-            
-            // Thêm class mở
-            document.querySelector('.wrapper').classList.add('open');
-            isOpen = true;
+        function openEnvelope() {
+            if (opened) return;
+            document.querySelector('.container').classList.add('open');
+            opened = true;
 
             // Phát nhạc
             music.volume = 0.7;
             music.play().catch(() => {
-                // Nếu trình duyệt chặn, nhắc người dùng bấm nút
                 document.getElementById("musicText").innerText = "Bấm để phát nhạc";
                 document.getElementById("musicIcon").innerText = "▶️";
             });
