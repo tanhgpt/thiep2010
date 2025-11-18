@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Mừng 20/11 - Bụi Phấn</title>
+    <title>Chúc Mừng 20/11 - Tri Ân Thầy</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Giữ nguyên CSS cũ và thêm phần nút nhạc --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        /* --- Reset và Cài đặt chung --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             height: 100vh;
@@ -17,34 +20,122 @@
             justify-content: center;
             align-items: center;
             font-family: 'Nunito', sans-serif;
+            overflow: hidden; /* Ngăn cuộn trang */
         }
 
-        .card {
-            background-color: #fff;
-            width: 90%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
+        /* --- Phong bì (Envelope) --- */
+        .envelope-wrapper {
             position: relative;
-            animation: slideUp 1s ease-out;
+            perspective: 1000px; /* Tạo hiệu ứng 3D */
+            cursor: pointer;
+            animation: fadeIn 1s ease-out; /* Hiệu ứng phong bì hiện ra */
         }
 
-        /* Trang trí góc */
-        .card::after {
-            content: "★";
-            font-size: 30px;
-            color: #f1c40f;
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background-color: #f7e1d7; /* Màu hồng nhạt cho phong bì */
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.8s ease; /* Hiệu ứng mở phong bì */
+            transform-style: preserve-3d;
+            z-index: 2; /* Đảm bảo phong bì nằm trên thiệp */
+        }
+
+        /* Nắp phong bì */
+        .envelope::before {
+            content: '';
             position: absolute;
-            top: 15px;
-            right: 20px;
-            transform: rotate(15deg);
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #f2cfc0; /* Màu đậm hơn cho nắp */
+            border-radius: 10px 10px 0 0;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 3; /* Nắp nằm trên phong bì */
         }
 
+        /* Miệng phong bì */
+        .envelope::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 100px solid #f2cfc0; /* Màu đậm hơn cho miệng */
+            border-radius: 0 0 10px 10px;
+            z-index: 1;
+        }
+
+        /* Chữ "Kính gửi Thầy" trên phong bì */
+        .envelope-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #884a44; /* Màu chữ nâu đỏ */
+            text-align: center;
+            line-height: 1.2;
+            z-index: 4; /* Nằm trên nắp */
+            pointer-events: none; /* Không cản trở click */
+        }
+        .envelope-text small {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+
+        /* Hiệu ứng khi phong bì mở */
+        .envelope-wrapper.open .envelope::before {
+            transform: rotateX(180deg); /* Nắp lật lên */
+            z-index: 0; /* Đưa nắp xuống dưới */
+        }
+
+        .envelope-wrapper.open .envelope {
+            transform: translateY(-20px) rotateX(10deg); /* Phong bì nhích nhẹ lên */
+        }
+
+        /* --- Thiệp bên trong (Card) --- */
+        .card {
+            background-color: #ffffff;
+            width: 280px; /* Nhỏ hơn phong bì một chút */
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eee;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0; /* Ẩn thiệp ban đầu */
+            transition: all 0.8s ease 0.5s; /* Hiệu ứng thiệp hiện ra sau khi mở phong bì */
+            z-index: 0; /* Thiệp nằm dưới phong bì */
+        }
+
+        .envelope-wrapper.open .card {
+            opacity: 1; /* Thiệp hiện ra */
+            transform: translate(-50%, -50%) scale(1); /* Thiệp phóng to về kích thước gốc */
+            z-index: 1; /* Đảm bảo thiệp nằm trên nắp đã lật */
+        }
+
+        /* --- Nội dung thiệp (Giữ nguyên từ code cũ) --- */
         .icon {
-            font-size: 70px;
+            font-size: 60px;
             margin-bottom: 15px;
             display: inline-block;
             animation: float 3s ease-in-out infinite;
@@ -53,15 +144,15 @@
         h1 {
             font-family: 'Dancing Script', cursive;
             color: #d35400;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
         }
 
         .message {
             color: #555;
             line-height: 1.6;
-            font-size: 1.1rem;
-            margin: 20px 0;
+            font-size: 1rem;
+            margin: 15px 0;
         }
 
         .signature {
@@ -73,45 +164,37 @@
 
         /* Nút phát nhạc */
         .music-btn {
-            margin-top: 25px;
-            padding: 12px 30px;
+            margin-top: 20px;
+            padding: 10px 25px;
             background: linear-gradient(to right, #ff416c, #ff4b2b);
             color: white;
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-
         .music-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(255, 75, 43, 0.6);
         }
-
         .music-btn:active {
             transform: translateY(1px);
         }
 
-        /* Animation nốt nhạc quay khi hát */
-        .spinning {
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
-
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
@@ -119,46 +202,97 @@
 </head>
 <body>
 
-    <div class="card">
-        <div class="icon">📚</div>
-        <h1>Tri Ân Thầy</h1>
-        
-        <div class="message">
-            "Mỗi khi nhắc về thời cắp sách,<br>
-            Hình bóng Thầy xưa lại hiện về."<br><br>
-            Nhân ngày <b>20/11</b>, em chúc Thầy luôn vui vẻ và gặt hái được nhiều thành công trong sự nghiệp trồng người!
+    <div class="envelope-wrapper" onclick="openEnvelope()">
+        <div class="envelope">
+            <div class="envelope-text">
+                Kính gửi Thầy
+                <small>Nhân ngày 20/11</small>
+            </div>
         </div>
+        
+        <div class="card" id="greetingCard">
+            <div class="icon">📚</div>
+            <h1>Tri Ân Thầy</h1>
+            
+            <div class="message">
+                "Mỗi khi nhắc về thời cắp sách,<br>
+                Hình bóng Thầy xưa lại hiện về."<br><br>
+                Nhân ngày <b>20/11</b>, em chúc Thầy luôn vui vẻ và gặt hái được nhiều thành công trong sự nghiệp trồng người!
+            </div>
 
-        <div class="signature">— Học trò cũ —</div>
+            <div class="signature">— Học trò cũ —</div>
 
-        <audio id="bgMusic" loop>
-            <source src="nhac_20_11.mp3" type="audio/mpeg">
-            Trình duyệt của bạn không hỗ trợ phát nhạc.
-        </audio>
-
-        <button class="music-btn" onclick="toggleMusic()">
-            <span id="musicIcon">▶️</span>
-            <span id="musicText">Phát bài "Bụi Phấn"</span>
-        </button>
+            <button class="music-btn" onclick="toggleMusic(event)">
+                <span id="musicIcon">💿</span>
+                <span id="musicText">Đang phát: Bụi Phấn...</span>
+            </button>
+        </div>
     </div>
 
+    <audio id="bgMusic" loop preload="auto">
+        <source src="nhac_20_11.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ phát nhạc.
+    </audio>
+
     <script>
-        // Hàm xử lý bật/tắt nhạc
-        function toggleMusic() {
-            var music = document.getElementById("bgMusic");
+        var music = document.getElementById("bgMusic");
+        var isMusicPlaying = false; // Biến theo dõi trạng thái nhạc
+
+        // Tự động phát nhạc khi trang tải xong
+        window.onload = function() {
+            music.volume = 0.7; // Điều chỉnh âm lượng (0.0 - 1.0)
+            music.play().then(() => {
+                console.log("Music started playing automatically.");
+                isMusicPlaying = true;
+                document.getElementById("musicIcon").classList.add("spinning");
+                document.getElementById("musicText").innerHTML = "Đang phát: Bụi Phấn...";
+            }).catch(error => {
+                console.log("Autoplay was prevented. User needs to interact.", error);
+                // Nếu tự động phát bị chặn, hiển thị nút tạm dừng và không xoay
+                document.getElementById("musicIcon").innerHTML = "▶️";
+                document.getElementById("musicText").innerHTML = "Phát bài "Bụi Phấn"";
+                document.getElementById("musicIcon").classList.remove("spinning");
+                isMusicPlaying = false;
+            });
+        };
+
+        // Hàm mở phong bì
+        function openEnvelope() {
+            var envelopeWrapper = document.querySelector(".envelope-wrapper");
+            envelopeWrapper.classList.add("open");
+
+            // Sau khi mở phong bì, tự động phát nhạc nếu chưa chạy được
+            if (!isMusicPlaying && music.paused) {
+                 music.play().then(() => {
+                    console.log("Music started playing after user interaction.");
+                    isMusicPlaying = true;
+                    document.getElementById("musicIcon").innerHTML = "💿";
+                    document.getElementById("musicIcon").classList.add("spinning");
+                    document.getElementById("musicText").innerHTML = "Đang phát: Bụi Phấn...";
+                 }).catch(error => {
+                    console.log("Music still prevented after click.", error);
+                 });
+            }
+        }
+
+        // Hàm bật/tắt nhạc khi click nút
+        function toggleMusic(event) {
+            event.stopPropagation(); // Ngăn sự kiện click nút lan ra phong bì
             var btnText = document.getElementById("musicText");
             var btnIcon = document.getElementById("musicIcon");
 
             if (music.paused) {
                 music.play();
                 btnText.innerHTML = "Đang phát: Bụi Phấn...";
-                btnIcon.innerHTML = "💿"; // Đổi icon thành đĩa nhạc
-                btnIcon.classList.add("spinning"); // Thêm hiệu ứng quay
+                btnIcon.innerHTML = "💿";
+                btnIcon.classList.add("spinning");
+                isMusicPlaying = true;
             } else {
                 music.pause();
                 btnText.innerHTML = "Tiếp tục phát nhạc";
                 btnIcon.innerHTML = "⏸️";
-                btnIcon.classList.remove("spinning"); // Dừng quay
+                btnIcon.classList.remove("spinning");
+                isMusicPlaying = false;
             }
         }
     </script>
