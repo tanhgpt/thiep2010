@@ -8,7 +8,7 @@
     
     <style>
         body {
-            background-color: #fdf2f2; /* Nền hồng rất nhạt */
+            background-color: #fdf2f2;
             height: 100vh;
             margin: 0;
             display: flex;
@@ -17,18 +17,18 @@
             font-family: 'Nunito', sans-serif;
         }
 
-        /* --- PHẦN 1: PHONG BÌ (Hiện lúc đầu) --- */
+        /* --- PHẦN 1: PHONG BÌ --- */
         #envelope-view {
             position: relative;
             width: 320px;
             height: 220px;
             cursor: pointer;
             transition: transform 0.3s;
-            animation: float 3s ease-in-out infinite; /* Hiệu ứng bay nhẹ */
+            animation: float 3s ease-in-out infinite;
         }
 
         #envelope-view:active {
-            transform: scale(0.95); /* Hiệu ứng nhấn nút */
+            transform: scale(0.95);
         }
 
         .env-body {
@@ -41,7 +41,6 @@
             z-index: 1;
         }
 
-        /* Nắp phong bì (Vẽ bằng CSS Border) */
         .env-flap {
             position: absolute;
             top: 0;
@@ -50,7 +49,7 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 110px solid #ffc3a0; /* Màu nắp sáng hơn */
+            border-top: 110px solid #ffc3a0;
             border-radius: 10px 10px 0 0;
             z-index: 2;
         }
@@ -88,9 +87,9 @@
             box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
         }
 
-        /* --- PHẦN 2: TẤM THIỆP (Hiện sau khi bấm) --- */
+        /* --- PHẦN 2: TẤM THIỆP --- */
         #card-view {
-            display: none; /* Ẩn đi ban đầu */
+            display: none;
             width: 90%;
             max-width: 350px;
             background: white;
@@ -99,7 +98,7 @@
             text-align: center;
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             border: 2px solid #ffe0e6;
-            animation: zoomIn 0.5s ease-out; /* Hiệu ứng hiện ra */
+            animation: zoomIn 0.5s ease-out;
         }
 
         .icon { font-size: 50px; margin-bottom: 10px; }
@@ -132,7 +131,6 @@
             margin-top: 5px; 
         }
 
-        /* Nút nhạc */
         .music-btn {
             margin-top: 20px;
             padding: 10px 25px;
@@ -148,12 +146,10 @@
             box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
         
-        /* Animation */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .spinning { animation: spin 2s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
     </style>
 </head>
 <body>
@@ -171,10 +167,11 @@
     <div id="card-view">
         <div class="icon">🎓</div>
         <h1>Tri Ân Thầy</h1>
+        
         <div class="message">
-            "Mỗi khi nhắc về thời cắp sách,<br>
-            Hình bóng Thầy xưa lại hiện về."<br><br>
-            Nhân ngày <b>20/11</b>, em kính chúc Thầy luôn mạnh khỏe, hạnh phúc và giữ mãi ngọn lửa đam mê với nghề giáo!
+            "Dù đi khắp bốn phương trời,<br>
+            Mãi nhớ về Thầy - người lái đò thầm lặng."<br><br>
+            Nhân ngày <b>20/11</b>, em kính chúc Thầy luôn mạnh khỏe, hạnh phúc và giữ mãi ngọn lửa đam mê với sự nghiệp trồng người cao cả!
         </div>
 
         <div class="signature">
@@ -196,13 +193,9 @@
         var music = document.getElementById("bgMusic");
         
         function openLetter() {
-            // 1. Ẩn phong bì
             document.getElementById("envelope-view").style.display = "none";
-            
-            // 2. Hiện thiệp
             document.getElementById("card-view").style.display = "block";
-
-            // 3. Phát nhạc
+            
             music.volume = 0.8;
             music.play().catch(function(error) {
                 document.getElementById("musicText").innerText = "Bấm để phát nhạc";
@@ -224,4 +217,5 @@
     </script>
 
 </body>
+</html>
 </html>
