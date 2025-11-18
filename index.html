@@ -37,20 +37,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: visible; 
+            overflow: hidden; /* Ẩn bớt phần thiệp thừa khi chưa mở */
+            border-radius: 10px; /* Bo góc cho container */
         }
 
         /* Khi mở thiệp, container sẽ cao hơn để thiệp trượt ra */
         .envelope-container.open {
             height: 480px; /* Chiều cao đủ để thiệp trượt ra phía trên */
             cursor: default; /* Bỏ cursor click khi đã mở */
+            overflow: visible; /* Cho phép nội dung tràn ra */
         }
 
         /* --- Phong bì (Envelope) --- */
         .envelope {
             width: 100%;
             height: 200px;
-            background-color: #f7e1d7;
+            background-color: #f7e1d7; /* Màu hồng nhạt */
             border-radius: 10px;
             position: absolute;
             top: 0;
@@ -70,7 +72,7 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 110px solid #e7c4b0;
+            border-top: 110px solid #e7c4b0; /* Màu đậm hơn cho nắp */
             border-radius: 10px 10px 0 0;
             transform-origin: top;
             transition: transform 0.8s ease;
@@ -87,7 +89,7 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-bottom: 110px solid #e2b49c;
+            border-bottom: 110px solid #e2b49c; /* Màu đậm hơn cho miệng */
             border-radius: 0 0 10px 10px;
             z-index: 1;
         }
@@ -104,7 +106,7 @@
             text-align: center;
             line-height: 1.2;
             z-index: 4;
-            transition: opacity 0.3s ease 0.1s;
+            transition: opacity 0.3s ease 0.1s; /* Chữ mờ dần khi mở */
             pointer-events: none;
             user-select: none;
         }
@@ -148,10 +150,11 @@
         /* --- TRẠNG THÁI MỞ (KHI CÓ CLASS 'open') --- */
         .envelope-container.open .envelope::before {
             transform: rotateX(180deg);
-            z-index: 0;
+            z-index: 0; /* Đặt nắp xuống dưới thiệp */
         }
         .envelope-container.open .envelope-text {
             opacity: 0;
+            transition-delay: 0s; /* Chữ biến mất ngay lập tức */
         }
         .envelope-container.open .open-button {
             opacity: 0;
@@ -168,10 +171,11 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: absolute;
-            top: 190px; 
+            top: 190px; /* Vị trí BAN ĐẦU: ẩn gần hết bên trong phong bì (dưới nắp) */
             left: 50%;
             transform: translate(-50%, 0); 
             opacity: 0;
+            /* Thiệp trượt lên trong 1 giây, bắt đầu sau 0.4 giây nắp mở */
             transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s; 
             z-index: 0;
             max-height: 80vh; 
@@ -181,9 +185,9 @@
 
         .envelope-container.open .card {
             opacity: 1; 
-            top: 20px; 
+            top: 20px; /* Vị trí CUỐI CÙNG: Trượt lên đỉnh container */
             transform: translate(-50%, 0);
-            z-index: 1; 
+            z-index: 1; /* Nằm trên nắp phong bì đã lật */
             height: auto;
         }
 
@@ -200,6 +204,12 @@
         }
         .signature {
             font-weight: 700; color: #2c3e50; margin-top: 15px; font-style: italic;
+            display: flex; /* Dùng flexbox để căn giữa 2 dòng */
+            flex-direction: column;
+            align-items: center;
+        }
+        .signature span { /* Dùng span để chứa mỗi dòng */
+            margin-top: 5px; /* Khoảng cách giữa Học trò cũ và tên */
         }
         .music-btn {
             margin-top: 20px; padding: 10px 25px; background: linear-gradient(to right, #ff416c, #ff4b2b);
@@ -244,7 +254,10 @@
                 Nhân ngày <b>20/11</b>, em chúc Thầy luôn vui vẻ và gặt hái được nhiều thành công trong sự nghiệp trồng người!
             </div>
 
-            <div class="signature">— Học trò cũ - Trần Quang Tân —</div>
+            <div class="signature">
+                <span>— Học trò cũ —</span>
+                <span>Trần Quang Tân</span>
+            </div>
 
             <button class="music-btn" onclick="toggleMusic(event)">
                 <span id="musicIcon">▶️</span>
