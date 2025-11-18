@@ -14,8 +14,8 @@
             box-sizing: border-box;
         }
         body {
-            /* Nền gradient Rose Gold ấm áp và trang trọng */
-            background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+            /* Nền màu hồng nhẹ nhàng (như bạn yêu cầu) */
+            background: linear-gradient(135deg, #ffe0e6 0%, #ffc0cb 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,22 +25,28 @@
         }
 
         /* --- Phong bì (Envelope) --- */
-        .envelope-wrapper {
+        .envelope-container { /* Thêm một container để căn chỉnh chung */
             position: relative;
             perspective: 1000px;
+            width: 320px; /* Kích thước rộng hơn một chút */
+            height: 220px;
             cursor: pointer;
-            width: 300px; /* Cố định kích thước */
-            height: 200px;
             animation: fadeIn 1s ease-out;
             transition: transform 0.8s ease;
+            display: flex; /* Dùng flex để căn nút */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .envelope {
             width: 100%;
-            height: 100%;
+            height: 200px; /* Chiều cao phong bì */
             background-color: #f7e1d7;
             border-radius: 10px;
             position: absolute;
+            top: 0;
+            left: 0;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform-style: preserve-3d;
             z-index: 2;
@@ -54,9 +60,9 @@
             left: 0;
             width: 0;
             height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 100px solid #e7c4b0; /* Nắp màu nâu nhạt */
+            border-left: 160px solid transparent; /* Nửa chiều rộng phong bì */
+            border-right: 160px solid transparent; /* Nửa chiều rộng phong bì */
+            border-top: 110px solid #e7c4b0; /* Chiều cao nắp */
             border-radius: 10px 10px 0 0;
             transform-origin: top;
             transition: transform 0.8s ease;
@@ -71,9 +77,9 @@
             left: 0;
             width: 0;
             height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-bottom: 100px solid #e2b49c; /* Miệng màu nâu nhạt đậm hơn */
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 110px solid #e2b49c;
             border-radius: 0 0 10px 10px;
             z-index: 1;
         }
@@ -90,8 +96,9 @@
             text-align: center;
             line-height: 1.2;
             z-index: 4;
-            transition: opacity 0.5s ease; /* Thêm hiệu ứng chữ mờ dần */
+            transition: opacity 0.5s ease;
             pointer-events: none;
+            user-select: none; /* Ngăn không cho chọn chữ */
         }
         .envelope-text small {
             font-family: 'Nunito', sans-serif;
@@ -101,22 +108,53 @@
             font-weight: 600;
         }
 
-
-        /* --- TRẠNG THÁI MỞ (KHI CÓ CLASS 'open') --- */
-        .envelope-wrapper.open .envelope::before {
-            transform: rotateX(180deg); /* Nắp lật lên 180 độ */
-            z-index: 0;
+        /* Nút "Ấn vào đây để mở" */
+        .open-button {
+            position: absolute;
+            bottom: -50px; /* Đặt dưới phong bì */
+            padding: 10px 20px;
+            background-color: #ff7f7f; /* Màu đỏ nhẹ */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 127, 127, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1;
+            opacity: 1;
+            pointer-events: auto; /* Cho phép click */
+        }
+        .open-button:hover {
+            background-color: #ff6363;
+            transform: translateY(-2px);
+        }
+        .open-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
         }
 
-        .envelope-wrapper.open .envelope-text {
-            opacity: 0; /* Ẩn chữ ngoài phong bì */
+        /* --- TRẠNG THÁI MỞ (KHI CÓ CLASS 'open') --- */
+        .envelope-container.open .envelope::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .envelope-container.open .envelope-text {
+            opacity: 0;
+        }
+        .envelope-container.open .open-button {
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* --- Thiệp bên trong (Card) --- */
         .card {
             background-color: #ffffff;
-            width: 280px;
-            padding: 30px;
+            width: 290px; /* Rộng hơn một chút để khớp với phong bì */
+            height: 180px; /* Chiều cao cố định để không bị chồng */
+            padding: 25px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -125,15 +163,17 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             opacity: 0;
-            /* Thiệp hiện ra 0.4s sau khi nắp bắt đầu lật */
-            transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s;
-            z-index: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s; /* Hiệu ứng thiệp hiện ra */
+            z-index: 0; /* Thiệp nằm dưới phong bì khi chưa mở */
+            overflow-y: auto; /* Thêm cuộn nếu nội dung quá dài */
         }
 
-        .envelope-wrapper.open .card {
+        .envelope-container.open .card {
             opacity: 1; 
             transform: translate(-50%, -50%) scale(1);
-            z-index: 1;
+            z-index: 1; /* Thiệp nằm trên nắp đã lật khi mở */
+            height: auto; /* Tự điều chỉnh chiều cao khi mở */
+            max-height: 80vh; /* Giới hạn chiều cao trên màn hình nhỏ */
         }
 
         /* --- Nội dung và Animations khác (Tối ưu từ code cũ) --- */
@@ -173,14 +213,16 @@
 </head>
 <body>
 
-    <div class="envelope-wrapper" onclick="openEnvelope()">
-        <div class="envelope">
+    <div class="envelope-container">
+        <div class="envelope" onclick="openEnvelope()">
             <div class="envelope-text">
                 Kính gửi Thầy
                 <small>Nhân ngày 20/11</small>
             </div>
         </div>
         
+        <button class="open-button" onclick="openEnvelope()">Ấn vào đây để mở</button>
+
         <div class="card" id="greetingCard">
             <div class="icon">📚</div>
             <h1>Tri Ân Thầy</h1>
@@ -189,7 +231,7 @@
                 "Mỗi khi nhắc về thời cắp sách,<br>
                 Hình bóng Thầy xưa lại hiện về."<br><br>
                 Nhân ngày <b>20/11</b>, em chúc Thầy luôn vui vẻ và gặt hái được nhiều thành công trong sự nghiệp trồng người!
-            </div>
+            </p>
 
             <div class="signature">— Học trò cũ —</div>
 
@@ -207,7 +249,8 @@
 
     <script>
         var music = document.getElementById("bgMusic");
-        var envelopeWrapper = document.querySelector(".envelope-wrapper");
+        var envelopeContainer = document.querySelector(".envelope-container");
+        var openButton = document.querySelector(".open-button");
         var hasBeenOpened = false; // Cờ (flag) để chỉ mở 1 lần
 
         // Hàm mở phong bì và phát nhạc
@@ -215,7 +258,9 @@
             if (hasBeenOpened) return; // Nếu đã mở, thoát khỏi hàm
 
             // BƯỚC 1: Mở phong bì (Thêm class CSS)
-            envelopeWrapper.classList.add("open");
+            envelopeContainer.classList.add("open");
+            openButton.classList.add("hidden"); // Ẩn nút
+
             hasBeenOpened = true; 
 
             // BƯỚC 2: Phát nhạc ngay lập tức (Nhờ tương tác của người dùng)
