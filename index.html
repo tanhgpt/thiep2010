@@ -14,7 +14,6 @@
             box-sizing: border-box;
         }
         body {
-            /* Nền màu hồng nhẹ nhàng */
             background: linear-gradient(135deg, #ffe0e6 0%, #ffc0cb 100%);
             height: 100vh;
             display: flex;
@@ -24,7 +23,7 @@
             overflow: hidden; 
         }
 
-        /* --- Container bao bọc tất cả (Điều chỉnh chiều cao để thiệp trượt ra) --- */
+        /* --- Container bao bọc tất cả --- */
         .envelope-container { 
             position: relative;
             perspective: 1000px;
@@ -32,37 +31,38 @@
             height: 200px; /* Chiều cao ban đầu bằng phong bì */
             cursor: pointer;
             animation: fadeIn 1s ease-out;
-            transition: height 1s ease-in-out; /* Hiệu ứng kéo dài chiều cao */
+            transition: height 1s ease-in-out; 
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Ẩn bớt phần thiệp thừa khi chưa mở */
-            border-radius: 10px; /* Bo góc cho container */
+            overflow: hidden; /* Đảm bảo ẩn mọi thứ bên ngoài phong bì */
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Box-shadow cho container thay vì envelope */
         }
 
         /* Khi mở thiệp, container sẽ cao hơn để thiệp trượt ra */
         .envelope-container.open {
-            height: 480px; /* Chiều cao đủ để thiệp trượt ra phía trên */
-            cursor: default; /* Bỏ cursor click khi đã mở */
-            overflow: visible; /* Cho phép nội dung tràn ra */
+            height: 500px; /* Chiều cao đủ để thiệp trượt ra hoàn chỉnh */
+            cursor: default;
+            overflow: visible; /* Cho phép thiệp hiện ra ngoài container khi trượt */
         }
 
         /* --- Phong bì (Envelope) --- */
         .envelope {
             width: 100%;
-            height: 200px;
-            background-color: #f7e1d7; /* Màu hồng nhạt */
+            height: 100%; /* Chiều cao 100% của container ban đầu */
+            background-color: #f7e1d7;
             border-radius: 10px;
             position: absolute;
             top: 0;
             left: 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            /* box-shadow bị bỏ đi ở đây để tránh trùng với container */
             transform-style: preserve-3d;
             z-index: 2;
         }
 
-        /* Nắp phong bì (Hiệu ứng mở) */
+        /* Nắp phong bì */
         .envelope::before {
             content: '';
             position: absolute;
@@ -72,14 +72,14 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 110px solid #e7c4b0; /* Màu đậm hơn cho nắp */
+            border-top: 110px solid #e7c4b0;
             border-radius: 10px 10px 0 0;
             transform-origin: top;
             transition: transform 0.8s ease;
             z-index: 3;
         }
 
-        /* Miệng phong bì */
+        /* Miệng phong bì (Phần dưới) */
         .envelope::after {
             content: '';
             position: absolute;
@@ -89,12 +89,12 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-bottom: 110px solid #e2b49c; /* Màu đậm hơn cho miệng */
+            border-bottom: 110px solid #e2b49c;
             border-radius: 0 0 10px 10px;
             z-index: 1;
         }
 
-        /* Chữ "Kính gửi Thầy" trên phong bì */
+        /* Chữ "Kính gửi Thầy" */
         .envelope-text {
             position: absolute;
             top: 50%;
@@ -106,7 +106,7 @@
             text-align: center;
             line-height: 1.2;
             z-index: 4;
-            transition: opacity 0.3s ease 0.1s; /* Chữ mờ dần khi mở */
+            transition: opacity 0.3s ease 0s; /* Chữ biến mất ngay lập tức */
             pointer-events: none;
             user-select: none;
         }
@@ -150,11 +150,10 @@
         /* --- TRẠNG THÁI MỞ (KHI CÓ CLASS 'open') --- */
         .envelope-container.open .envelope::before {
             transform: rotateX(180deg);
-            z-index: 0; /* Đặt nắp xuống dưới thiệp */
+            z-index: 0;
         }
         .envelope-container.open .envelope-text {
             opacity: 0;
-            transition-delay: 0s; /* Chữ biến mất ngay lập tức */
         }
         .envelope-container.open .open-button {
             opacity: 0;
@@ -171,7 +170,7 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: absolute;
-            top: 190px; /* Vị trí BAN ĐẦU: ẩn gần hết bên trong phong bì (dưới nắp) */
+            top: 150px; /* Vị trí khởi điểm của thiệp: sâu hơn trong phong bì */
             left: 50%;
             transform: translate(-50%, 0); 
             opacity: 0;
@@ -185,9 +184,9 @@
 
         .envelope-container.open .card {
             opacity: 1; 
-            top: 20px; /* Vị trí CUỐI CÙNG: Trượt lên đỉnh container */
+            top: 20px; /* Vị trí cuối cùng: trượt lên gần đỉnh container */
             transform: translate(-50%, 0);
-            z-index: 1; /* Nằm trên nắp phong bì đã lật */
+            z-index: 1; 
             height: auto;
         }
 
@@ -204,12 +203,12 @@
         }
         .signature {
             font-weight: 700; color: #2c3e50; margin-top: 15px; font-style: italic;
-            display: flex; /* Dùng flexbox để căn giữa 2 dòng */
+            display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .signature span { /* Dùng span để chứa mỗi dòng */
-            margin-top: 5px; /* Khoảng cách giữa Học trò cũ và tên */
+        .signature span {
+            margin-top: 5px;
         }
         .music-btn {
             margin-top: 20px; padding: 10px 25px; background: linear-gradient(to right, #ff416c, #ff4b2b);
