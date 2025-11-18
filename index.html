@@ -14,36 +14,39 @@
             box-sizing: border-box;
         }
         body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            /* Nền gradient Rose Gold ấm áp và trang trọng */
+            background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Nunito', sans-serif;
-            overflow: hidden; /* Ngăn cuộn trang */
+            overflow: hidden; 
         }
 
         /* --- Phong bì (Envelope) --- */
         .envelope-wrapper {
             position: relative;
-            perspective: 1000px; /* Tạo hiệu ứng 3D */
+            perspective: 1000px;
             cursor: pointer;
-            animation: fadeIn 1s ease-out; /* Hiệu ứng phong bì hiện ra */
+            width: 300px; /* Cố định kích thước */
+            height: 200px;
+            animation: fadeIn 1s ease-out;
+            transition: transform 0.8s ease;
         }
 
         .envelope {
-            width: 300px;
-            height: 200px;
-            background-color: #f7e1d7; /* Màu hồng nhạt cho phong bì */
+            width: 100%;
+            height: 100%;
+            background-color: #f7e1d7;
             border-radius: 10px;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.8s ease; /* Hiệu ứng mở phong bì */
+            position: absolute;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform-style: preserve-3d;
-            z-index: 2; /* Đảm bảo phong bì nằm trên thiệp */
+            z-index: 2;
         }
 
-        /* Nắp phong bì */
+        /* Nắp phong bì (Hiệu ứng mở) */
         .envelope::before {
             content: '';
             position: absolute;
@@ -53,11 +56,11 @@
             height: 0;
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
-            border-top: 100px solid #f2cfc0; /* Màu đậm hơn cho nắp */
+            border-top: 100px solid #e7c4b0; /* Nắp màu nâu nhạt */
             border-radius: 10px 10px 0 0;
             transform-origin: top;
             transition: transform 0.8s ease;
-            z-index: 3; /* Nắp nằm trên phong bì */
+            z-index: 3;
         }
 
         /* Miệng phong bì */
@@ -70,7 +73,7 @@
             height: 0;
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
-            border-bottom: 100px solid #f2cfc0; /* Màu đậm hơn cho miệng */
+            border-bottom: 100px solid #e2b49c; /* Miệng màu nâu nhạt đậm hơn */
             border-radius: 0 0 10px 10px;
             z-index: 1;
         }
@@ -83,11 +86,12 @@
             transform: translate(-50%, -50%);
             font-family: 'Dancing Script', cursive;
             font-size: 1.8rem;
-            color: #884a44; /* Màu chữ nâu đỏ */
+            color: #884a44;
             text-align: center;
             line-height: 1.2;
-            z-index: 4; /* Nằm trên nắp */
-            pointer-events: none; /* Không cản trở click */
+            z-index: 4;
+            transition: opacity 0.5s ease; /* Thêm hiệu ứng chữ mờ dần */
+            pointer-events: none;
         }
         .envelope-text small {
             font-family: 'Nunito', sans-serif;
@@ -98,102 +102,69 @@
         }
 
 
-        /* Hiệu ứng khi phong bì mở */
+        /* --- TRẠNG THÁI MỞ (KHI CÓ CLASS 'open') --- */
         .envelope-wrapper.open .envelope::before {
-            transform: rotateX(180deg); /* Nắp lật lên */
-            z-index: 0; /* Đưa nắp xuống dưới */
+            transform: rotateX(180deg); /* Nắp lật lên 180 độ */
+            z-index: 0;
         }
 
-        .envelope-wrapper.open .envelope {
-            transform: translateY(-20px) rotateX(10deg); /* Phong bì nhích nhẹ lên */
+        .envelope-wrapper.open .envelope-text {
+            opacity: 0; /* Ẩn chữ ngoài phong bì */
         }
 
         /* --- Thiệp bên trong (Card) --- */
         .card {
             background-color: #ffffff;
-            width: 280px; /* Nhỏ hơn phong bì một chút */
-            max-width: 400px;
+            width: 280px;
             padding: 30px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #eee;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 0; /* Ẩn thiệp ban đầu */
-            transition: all 0.8s ease 0.5s; /* Hiệu ứng thiệp hiện ra sau khi mở phong bì */
-            z-index: 0; /* Thiệp nằm dưới phong bì */
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+            /* Thiệp hiện ra 0.4s sau khi nắp bắt đầu lật */
+            transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s;
+            z-index: 0;
         }
 
         .envelope-wrapper.open .card {
-            opacity: 1; /* Thiệp hiện ra */
-            transform: translate(-50%, -50%) scale(1); /* Thiệp phóng to về kích thước gốc */
-            z-index: 1; /* Đảm bảo thiệp nằm trên nắp đã lật */
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 1;
         }
 
-        /* --- Nội dung thiệp (Giữ nguyên từ code cũ) --- */
+        /* --- Nội dung và Animations khác (Tối ưu từ code cũ) --- */
         .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-            display: inline-block;
+            font-size: 60px; margin-bottom: 15px; display: inline-block;
             animation: float 3s ease-in-out infinite;
         }
-
         h1 {
-            font-family: 'Dancing Script', cursive;
-            color: #d35400;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-family: 'Dancing Script', cursive; color: #d35400; font-size: 2.5rem; margin-bottom: 10px;
         }
-
         .message {
-            color: #555;
-            line-height: 1.6;
-            font-size: 1rem;
-            margin: 15px 0;
+            color: #555; line-height: 1.6; font-size: 1rem; margin: 15px 0;
         }
-
         .signature {
-            font-weight: 700;
-            color: #2c3e50;
-            margin-top: 15px;
-            font-style: italic;
+            font-weight: 700; color: #2c3e50; margin-top: 15px; font-style: italic;
         }
-
-        /* Nút phát nhạc */
         .music-btn {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            margin-top: 20px; padding: 10px 25px; background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white; border: none; border-radius: 50px; font-size: 0.9rem; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4); transition: all 0.3s ease; display: inline-flex;
+            align-items: center; gap: 8px;
         }
-        .music-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 75, 43, 0.6);
-        }
-        .music-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* --- Animations --- */
+        .music-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 75, 43, 0.6); }
+        .music-btn:active { transform: translateY(1px); }
+        .spinning { animation: spin 2s linear infinite; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); }
         }
         @keyframes spin {
             100% { transform: rotate(360deg); }
@@ -223,8 +194,8 @@
             <div class="signature">— Học trò cũ —</div>
 
             <button class="music-btn" onclick="toggleMusic(event)">
-                <span id="musicIcon">💿</span>
-                <span id="musicText">Đang phát: Bụi Phấn...</span>
+                <span id="musicIcon">▶️</span>
+                <span id="musicText">Chờ mở phong bì...</span>
             </button>
         </div>
     </div>
@@ -236,48 +207,33 @@
 
     <script>
         var music = document.getElementById("bgMusic");
-        var isMusicPlaying = false; // Biến theo dõi trạng thái nhạc
+        var envelopeWrapper = document.querySelector(".envelope-wrapper");
+        var hasBeenOpened = false; // Cờ (flag) để chỉ mở 1 lần
 
-        // Tự động phát nhạc khi trang tải xong
-        window.onload = function() {
-            music.volume = 0.7; // Điều chỉnh âm lượng (0.0 - 1.0)
+        // Hàm mở phong bì và phát nhạc
+        function openEnvelope() {
+            if (hasBeenOpened) return; // Nếu đã mở, thoát khỏi hàm
+
+            // BƯỚC 1: Mở phong bì (Thêm class CSS)
+            envelopeWrapper.classList.add("open");
+            hasBeenOpened = true; 
+
+            // BƯỚC 2: Phát nhạc ngay lập tức (Nhờ tương tác của người dùng)
+            music.volume = 0.8; 
             music.play().then(() => {
-                console.log("Music started playing automatically.");
-                isMusicPlaying = true;
+                // Cập nhật trạng thái nút nhạc thành ĐANG PHÁT
+                document.getElementById("musicIcon").innerHTML = "💿";
                 document.getElementById("musicIcon").classList.add("spinning");
                 document.getElementById("musicText").innerHTML = "Đang phát: Bụi Phấn...";
             }).catch(error => {
-                console.log("Autoplay was prevented. User needs to interact.", error);
-                // Nếu tự động phát bị chặn, hiển thị nút tạm dừng và không xoay
-                document.getElementById("musicIcon").innerHTML = "▶️";
-                document.getElementById("musicText").innerHTML = "Phát bài "Bụi Phấn"";
-                document.getElementById("musicIcon").classList.remove("spinning");
-                isMusicPlaying = false;
+                // Nếu vẫn có lỗi (rất hiếm):
+                document.getElementById("musicText").innerHTML = "Nhấn để phát nhạc";
             });
-        };
-
-        // Hàm mở phong bì
-        function openEnvelope() {
-            var envelopeWrapper = document.querySelector(".envelope-wrapper");
-            envelopeWrapper.classList.add("open");
-
-            // Sau khi mở phong bì, tự động phát nhạc nếu chưa chạy được
-            if (!isMusicPlaying && music.paused) {
-                 music.play().then(() => {
-                    console.log("Music started playing after user interaction.");
-                    isMusicPlaying = true;
-                    document.getElementById("musicIcon").innerHTML = "💿";
-                    document.getElementById("musicIcon").classList.add("spinning");
-                    document.getElementById("musicText").innerHTML = "Đang phát: Bụi Phấn...";
-                 }).catch(error => {
-                    console.log("Music still prevented after click.", error);
-                 });
-            }
         }
 
         // Hàm bật/tắt nhạc khi click nút
         function toggleMusic(event) {
-            event.stopPropagation(); // Ngăn sự kiện click nút lan ra phong bì
+            event.stopPropagation(); // Ngăn sự kiện click nút lan ra phong bì (để không mở phong bì lại)
             var btnText = document.getElementById("musicText");
             var btnIcon = document.getElementById("musicIcon");
 
@@ -286,13 +242,11 @@
                 btnText.innerHTML = "Đang phát: Bụi Phấn...";
                 btnIcon.innerHTML = "💿";
                 btnIcon.classList.add("spinning");
-                isMusicPlaying = true;
             } else {
                 music.pause();
                 btnText.innerHTML = "Tiếp tục phát nhạc";
                 btnIcon.innerHTML = "⏸️";
                 btnIcon.classList.remove("spinning");
-                isMusicPlaying = false;
             }
         }
     </script>
